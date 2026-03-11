@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+cln:
+  grpc:
+    host: 127.0.0.1
+    port: 9736
+    ca-cert: /var/lib/lightning/bitcoin/ca.pem
+    client-cert: /var/lib/lightning/bitcoin/client.pem
+    client-key: /var/lib/lightning/bitcoin/client-key.pem
