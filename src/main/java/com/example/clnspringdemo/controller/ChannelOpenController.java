@@ -28,30 +28,28 @@ public class ChannelOpenController {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Open Channel</title>
   <script src="/tailwind.js"></script>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }
-    .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:720px; }
-    label { display:block; margin:12px 0 6px; color:#9aa4b2; }
-    input { width:100%; padding:10px; border-radius:8px; border:1px solid #242833; background:#0f1115; color:#e8e8e8; }
-    button { margin-top:16px; padding:10px 16px; border:0; border-radius:8px; background:#2d6cdf; color:white; font-weight:600; }
-    a { color:#8ab4f8; text-decoration:none; }
-  </style>
 </head>
-<body>
-  <div class="card">
-    <h1>Open Channel</h1>
-    <form method="post" action="/channels/open">
-      <label>Connection string (nodeid@host:port)</label>
-      <input name="connection" placeholder="02ab...@1.2.3.4:9735" required />
-      <label>Capacity (sats)</label>
-      <input name="capacity" type="number" min="1" step="1" required />
-      <label style="display:flex; align-items:center; gap:8px; margin-top:12px;">
-        <input type="checkbox" name="privateChannel" />
-        Private channel (do not announce)
-      </label>
-      <button type="submit">Open Channel</button>
-    </form>
-    <p style="margin-top:16px;"><a href="/">← Back</a></p>
+<body class="bg-slate-950 text-slate-100">
+  <div class="max-w-2xl mx-auto p-4 sm:p-6">
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6">
+      <h1 class="text-xl sm:text-2xl font-semibold">Open Channel</h1>
+      <form method="post" action="/channels/open" class="mt-4 space-y-3">
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">Connection string (nodeid@host:port)</label>
+          <input name="connection" placeholder="02ab...@1.2.3.4:9735" required class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800" />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">Capacity (sats)</label>
+          <input name="capacity" type="number" min="1" step="1" required class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800" />
+        </div>
+        <label class="flex items-center gap-2 text-sm text-slate-300">
+          <input type="checkbox" name="privateChannel" class="rounded border-slate-700" />
+          Private channel (do not announce)
+        </label>
+        <button type="submit" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 font-semibold">Open Channel</button>
+      </form>
+      <div class="mt-4"><a class="text-blue-400 hover:underline" href="/">← Back</a></div>
+    </div>
   </div>
 </body>
 </html>
@@ -73,21 +71,17 @@ public class ChannelOpenController {
             .append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n")
             .append("  <title>Channel Opened</title>\n")
             .append("  <script src=\"/tailwind.js\"></script>\n")
-            .append("  <style>\n")
-            .append("    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }\n")
-            .append("    .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:720px; }\n")
-            .append("    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:12px; word-break: break-all; }\n")
-            .append("    a { color:#8ab4f8; text-decoration:none; }\n")
-            .append("  </style>\n")
             .append("</head>\n")
-            .append("<body>\n")
-            .append("  <div class=\"card\">\n")
-            .append("    <h1>Channel Opened</h1>\n")
-            .append("    <p>TXID:</p>\n")
-            .append("    <div class=\"mono\">").append(result.txid()).append("</div>\n")
-            .append("    <p>Channel ID:</p>\n")
-            .append("    <div class=\"mono\">").append(result.channelId()).append("</div>\n")
-            .append("    <p style=\"margin-top:16px;\"><a href=\"/\">← Back</a></p>\n")
+            .append("<body class=\"bg-slate-950 text-slate-100\">\n")
+            .append("  <div class=\"max-w-2xl mx-auto p-4 sm:p-6\">\n")
+            .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
+            .append("      <h1 class=\"text-xl sm:text-2xl font-semibold\">Channel Opened</h1>\n")
+            .append("      <div class=\"mt-4 space-y-3 text-sm\">\n")
+            .append("        <div><span class=\"text-slate-400\">TXID:</span> <span class=\"font-mono text-xs break-all\">\n").append(result.txid()).append("</span></div>\n")
+            .append("        <div><span class=\"text-slate-400\">Channel ID:</span> <span class=\"font-mono text-xs break-all\">\n").append(result.channelId()).append("</span></div>\n")
+            .append("      </div>\n")
+            .append("      <div class=\"mt-4\"><a class=\"text-blue-400 hover:underline\" href=\"/\">← Back</a></div>\n")
+            .append("    </div>\n")
             .append("  </div>\n")
             .append("</body>\n")
             .append("</html>\n");

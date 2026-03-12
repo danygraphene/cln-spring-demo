@@ -29,6 +29,7 @@ public class HomeController {
         long lightningSat = clnService.getLightningBalanceSat();
         var channels = clnService.listChannels();
         var payments = clnService.listPayments();
+
         StringBuilder html = new StringBuilder();
         html.append("<!doctype html>\n")
             .append("<html lang=\"en\">\n")
@@ -38,115 +39,107 @@ public class HomeController {
             .append("  <meta name=\"format-detection\" content=\"telephone=no\" />\n")
             .append("  <title>CLN Dashboard</title>\n")
             .append("  <script src=\"/tailwind.js\"></script>\n")
-            .append("  <style>\n")
-            .append("    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }\n")
-            .append("    .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:980px; }\n")
-            .append("    h1 { margin:0 0 12px; font-size:24px; }\n")
-            .append("    h2 { margin:20px 0 12px; font-size:18px; }\n")
-            .append("    .kv { display:grid; grid-template-columns: 160px 1fr; gap:8px 16px; }\n")
-            .append("    .k { color:#9aa4b2; }\n")
-            .append("    .balances { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px; }\n")
-            .append("    .bal { background:#12151c; border:1px solid #242833; border-radius:10px; padding:12px; }\n")
-            .append("    .bal .label { color:#9aa4b2; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }\n")
-            .append("    .bal .value { font-size:20px; font-weight:600; }\n")
-            .append("    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 4px; }\n")
-            .append("    .actions form { margin:0; }\n")
-            .append("    .actions input { padding:8px 10px; border-radius:8px; border:1px solid #242833; background:#0f1115; color:#e8e8e8; }\n")
-            .append("    .actions button { padding:8px 12px; border:0; border-radius:8px; background:#2d6cdf; color:white; font-weight:600; }\n")
-            .append("    table { width:100%; border-collapse: collapse; margin-top:8px; display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }\n")
-            .append("    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid #242833; font-size:14px; white-space:nowrap; }\n")
-            .append("    th { color:#9aa4b2; font-weight:600; }\n")
-            .append("    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:12px; }\n")
-            .append("    @media (max-width: 640px) {\n")
-            .append("      body { padding: 16px; }\n")
-            .append("      .card { padding: 16px; }\n")
-            .append("      h1 { font-size: 20px; }\n")
-            .append("      h2 { font-size: 16px; }\n")
-            .append("      .kv { grid-template-columns: 1fr; }\n")
-            .append("      .balances { grid-template-columns: 1fr; }\n")
-            .append("      .actions { flex-direction: column; }\n")
-            .append("      .k { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }\n")
-            .append("    }\n")
-            .append("  </style>\n")
             .append("</head>\n")
-            .append("<body>\n")
-            .append("  <div class=\"card\">\n")
-            .append("    <h1>Core Lightning Node Info</h1>\n")
-            .append("    <div class=\"balances\">\n")
-            .append("      <div class=\"bal\"><div class=\"label\">On-chain balance</div><div class=\"value\">").append(onchainSat).append(" sats</div></div>\n")
-            .append("      <div class=\"bal\"><div class=\"label\">Lightning balance</div><div class=\"value\">").append(lightningSat).append(" sats</div></div>\n")
+            .append("<body class=\"bg-slate-950 text-slate-100\">\n")
+            .append("  <div class=\"max-w-5xl mx-auto p-4 sm:p-6 space-y-6\">\n")
+            .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
+            .append("      <h1 class=\"text-xl sm:text-2xl font-semibold\">Core Lightning Node</h1>\n")
+            .append("      <div class=\"grid gap-3 sm:grid-cols-2 mt-4\">\n")
+            .append("        <div class=\"bg-slate-900 border border-slate-800 rounded-lg p-3\">\n")
+            .append("          <div class=\"text-xs uppercase tracking-wide text-slate-400\">On-chain balance</div>\n")
+            .append("          <div class=\"text-lg font-semibold\">").append(onchainSat).append(" sats</div>\n")
+            .append("        </div>\n")
+            .append("        <div class=\"bg-slate-900 border border-slate-800 rounded-lg p-3\">\n")
+            .append("          <div class=\"text-xs uppercase tracking-wide text-slate-400\">Lightning balance</div>\n")
+            .append("          <div class=\"text-lg font-semibold\">").append(lightningSat).append(" sats</div>\n")
+            .append("        </div>\n")
+            .append("      </div>\n")
+
+            .append("      <div class=\"flex flex-col gap-3 sm:flex-row sm:items-center mt-4\">\n")
+            .append("        <form method=\"post\" action=\"/actions/onchain-address\" class=\"w-full sm:w-auto\">\n")
+            .append("          <button class=\"w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 font-semibold\" type=\"submit\">New on-chain address</button>\n")
+            .append("        </form>\n")
+            .append("        <form method=\"post\" action=\"/actions/invoice\" class=\"flex flex-col sm:flex-row gap-2 w-full\">\n")
+            .append("          <input name=\"amount\" type=\"number\" min=\"1\" step=\"1\" placeholder=\"sats\" required class=\"w-full sm:w-32 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800\" />\n")
+            .append("          <input name=\"description\" placeholder=\"description\" class=\"flex-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800\" />\n")
+            .append("          <button class=\"w-full sm:w-auto px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold\" type=\"submit\">Create invoice</button>\n")
+            .append("        </form>\n")
+            .append("      </div>\n")
+
+            .append("      <div class=\"grid gap-2 mt-5 text-sm\">\n")
+            .append("        <div><span class=\"text-slate-400\">Alias:</span> ").append(safe(info.alias())).append("</div>\n")
+            .append("        <div><span class=\"text-slate-400\">Node ID:</span> <span class=\"font-mono text-xs break-all\">\n").append(safe(info.nodeId())).append("</span></div>\n")
+            .append("        <div><span class=\"text-slate-400\">Network:</span> ").append(safe(info.network())).append("</div>\n")
+            .append("        <div><span class=\"text-slate-400\">Block Height:</span> ").append(info.blockHeight()).append("</div>\n")
+            .append("        <div><span class=\"text-slate-400\">Gradle:</span> ").append(safe(getGradleVersion())).append("</div>\n")
+            .append("      </div>\n")
+
+            .append("      <div class=\"mt-4\"><a class=\"text-blue-400 hover:underline\" href=\"/channels/open\">Open a channel</a></div>\n")
             .append("    </div>\n")
-            .append("    <div class=\"actions\">\n")
-            .append("      <form method=\"post\" action=\"/actions/onchain-address\">\n")
-            .append("        <button type=\"submit\">New on-chain address</button>\n")
-            .append("      </form>\n")
-            .append("      <form method=\"post\" action=\"/actions/invoice\">\n")
-            .append("        <input name=\"amount\" type=\"number\" min=\"1\" step=\"1\" placeholder=\"sats\" required />\n")
-            .append("        <input name=\"description\" placeholder=\"description\" />\n")
-            .append("        <button type=\"submit\">Create invoice</button>\n")
-            .append("      </form>\n")
-            .append("    </div>\n")
-            .append("    <div class=\"kv\">\n")
-            .append("      <div class=\"k\">Alias</div><div>").append(safe(info.alias())).append("</div>\n")
-            .append("      <div class=\"k\">Node ID</div><div class=\"mono\">").append(safe(info.nodeId())).append("</div>\n")
-            .append("      <div class=\"k\">Network</div><div>").append(safe(info.network())).append("</div>\n")
-            .append("      <div class=\"k\">Block Height</div><div>").append(info.blockHeight()).append("</div>\n")
-            .append("      <div class=\"k\">Gradle</div><div>").append(safe(getGradleVersion())).append("</div>\n")
-            .append("    </div>\n")
-            .append("    <p><a href=\"/channels/open\">Open a channel</a></p>\n")
-            .append("    <h2>Channels</h2>\n")
-            .append("    <table>\n")
-            .append("      <thead><tr>\n")
-            .append("        <th>Short ID</th><th>Peer ID</th><th>State</th><th>Capacity (msat)</th><th>Spendable (msat)</th><th>Receivable (msat)</th>\n")
-            .append("      </tr></thead>\n")
-            .append("      <tbody>\n");
+
+            .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
+            .append("      <h2 class=\"text-lg font-semibold\">Channels</h2>\n")
+            .append("      <div class=\"overflow-x-auto mt-3\">\n")
+            .append("        <table class=\"min-w-full text-sm\">\n")
+            .append("          <thead class=\"text-slate-400\"><tr>\n")
+            .append("            <th class=\"text-left p-2\">Short ID</th><th class=\"text-left p-2\">Peer ID</th><th class=\"text-left p-2\">State</th><th class=\"text-left p-2\">Capacity</th><th class=\"text-left p-2\">Spendable</th><th class=\"text-left p-2\">Receivable</th>\n")
+            .append("          </tr></thead>\n")
+            .append("          <tbody class=\"divide-y divide-slate-800\">\n");
 
         for (var ch : channels) {
-            html.append("      <tr>")
-                .append("<td class=\"mono\">").append(safe(ch.shortChannelId())).append("</td>")
-                .append("<td class=\"mono\">").append(safe(ch.peerId())).append("</td>")
-                .append("<td>").append(safe(ch.state())).append("</td>")
-                .append("<td>").append(ch.capacityMsat()).append("</td>")
-                .append("<td>").append(ch.spendableMsat()).append("</td>")
-                .append("<td>").append(ch.receivableMsat()).append("</td>")
+            html.append("          <tr>")
+                .append("<td class=\"p-2 font-mono text-xs\">").append(safe(ch.shortChannelId())).append("</td>")
+                .append("<td class=\"p-2 font-mono text-xs\">").append(safe(ch.peerId())).append("</td>")
+                .append("<td class=\"p-2\">").append(safe(ch.state())).append("</td>")
+                .append("<td class=\"p-2\">").append(ch.capacityMsat()).append("</td>")
+                .append("<td class=\"p-2\">").append(ch.spendableMsat()).append("</td>")
+                .append("<td class=\"p-2\">").append(ch.receivableMsat()).append("</td>")
                 .append("</tr>\n");
         }
 
         if (channels.isEmpty()) {
-            html.append("      <tr><td colspan=\"6\" class=\"k\">No channels</td></tr>\n");
+            html.append("          <tr><td colspan=\"6\" class=\"p-2 text-slate-400\">No channels</td></tr>\n");
         }
 
-        html.append("      </tbody>\n")
-            .append("    </table>\n")
-            .append("    <h2>Payments</h2>\n")
-            .append("    <table>\n")
-            .append("      <thead><tr>\n")
-            .append("        <th>Created</th><th>Status</th><th>Amount (msat)</th><th>Sent (msat)</th><th>Label</th><th>Dest</th><th>Hash</th>\n")
-            .append("      </tr></thead>\n")
-            .append("      <tbody>\n");
+        html.append("          </tbody>\n")
+            .append("        </table>\n")
+            .append("      </div>\n")
+            .append("    </div>\n")
+
+            .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
+            .append("      <h2 class=\"text-lg font-semibold\">Payments</h2>\n")
+            .append("      <div class=\"overflow-x-auto mt-3\">\n")
+            .append("        <table class=\"min-w-full text-sm\">\n")
+            .append("          <thead class=\"text-slate-400\"><tr>\n")
+            .append("            <th class=\"text-left p-2\">Created</th><th class=\"text-left p-2\">Status</th><th class=\"text-left p-2\">Amount</th><th class=\"text-left p-2\">Sent</th><th class=\"text-left p-2\">Label</th><th class=\"text-left p-2\">Dest</th><th class=\"text-left p-2\">Hash</th>\n")
+            .append("          </tr></thead>\n")
+            .append("          <tbody class=\"divide-y divide-slate-800\">\n");
 
         for (var p : payments) {
-            html.append("      <tr>")
-                .append("<td>").append(p.createdAt()).append("</td>")
-                .append("<td>").append(safe(p.status())).append("</td>")
-                .append("<td>").append(p.amountMsat()).append("</td>")
-                .append("<td>").append(p.amountSentMsat()).append("</td>")
-                .append("<td>").append(safe(p.label())).append("</td>")
-                .append("<td class=\"mono\">").append(safe(p.destination())).append("</td>")
-                .append("<td class=\"mono\"><span>").append(safe(p.paymentHash())).append("</span> ")
-                .append("<a href=\"/payments/").append(safe(p.paymentHash())).append("\">view</a></td>")
+            html.append("          <tr>")
+                .append("<td class=\"p-2\">").append(p.createdAt()).append("</td>")
+                .append("<td class=\"p-2\">").append(safe(p.status())).append("</td>")
+                .append("<td class=\"p-2\">").append(p.amountMsat()).append("</td>")
+                .append("<td class=\"p-2\">").append(p.amountSentMsat()).append("</td>")
+                .append("<td class=\"p-2\">").append(safe(p.label())).append("</td>")
+                .append("<td class=\"p-2 font-mono text-xs\">").append(safe(p.destination())).append("</td>")
+                .append("<td class=\"p-2 font-mono text-xs\"><span>").append(safe(p.paymentHash())).append("</span> ")
+                .append("<a class=\"text-blue-400 hover:underline\" href=\"/payments/").append(safe(p.paymentHash())).append("\">view</a></td>")
                 .append("</tr>\n");
         }
 
         if (payments.isEmpty()) {
-            html.append("      <tr><td colspan=\"7\" class=\"k\">No payments</td></tr>\n");
+            html.append("          <tr><td colspan=\"7\" class=\"p-2 text-slate-400\">No payments</td></tr>\n");
         }
 
-        html.append("      </tbody>\n")
-            .append("    </table>\n")
+        html.append("          </tbody>\n")
+            .append("        </table>\n")
+            .append("      </div>\n")
+            .append("    </div>\n")
             .append("  </div>\n")
             .append("</body>\n")
             .append("</html>\n");
+
         return html.toString();
     }
 
