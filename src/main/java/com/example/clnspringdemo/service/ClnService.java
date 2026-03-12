@@ -167,6 +167,44 @@ public class ClnService {
         );
     }
 
+    public long getOnchainBalanceSat() {
+        ListfundsResponse response = nodeStub.listFunds(ListfundsRequest.newBuilder().build());
+        long msat = response.getOutputsList().stream()
+                .filter(o -> o.getStatus() != ListfundsOutputs.ListfundsOutputsStatus.SPENT)
+                .mapToLong(o -> o.getAmountMsat().getMsat())
+                .sum();
+        return msat / 1000L;
+    }
+
+    public long getLightningBalanceSat() {
+        ListfundsResponse response = nodeStub.listFunds(ListfundsRequest.newBuilder().build());
+        long msat = response.getChannelsList().stream()
+                .mapToLong(c -> c.getOurAmountMsat().getMsat())
+                .sum();
+        return msat / 1000L;
+    }
+
+    public String newOnchainAddress() {
+        NewaddrResponse response = nodeStub.newAddr(
+                NewaddrRequest.newBuilder().setAddresstype(NewaddrRequest.NewaddrAddresstype.BECH32).build()
+        );
+        if (response.hasBech32()) return response.getBech32();
+        if (response.hasP2Tr()) return response.getP2Tr();
+        return "";
+    }
+
+    public String createInvoice(long amountSat, String description) {
+        String label = "invoice-" + System.currentTimeMillis();
+        InvoiceResponse response = nodeStub.invoice(
+                InvoiceRequest.newBuilder()
+                        .setLabel(label)
+                        .setDescription(description != null ? description : "invoice")
+                        .setAmountMsat(AmountOrAny.newBuilder().setAmount(Amount.newBuilder().setMsat(amountSat * 1000L)))
+                        .build()
+        );
+        return response.getBolt11();
+    }
+
     private String bytesToHex(ByteString bytes) {
         return HexFormat.of().formatHex(bytes.toByteArray());
     }

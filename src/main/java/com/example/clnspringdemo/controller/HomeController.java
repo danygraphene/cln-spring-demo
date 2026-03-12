@@ -25,6 +25,8 @@ public class HomeController {
     @ResponseBody
     public String home() {
         NodeInfo info = clnService.getInfo();
+        long onchainSat = clnService.getOnchainBalanceSat();
+        long lightningSat = clnService.getLightningBalanceSat();
         var channels = clnService.listChannels();
         var payments = clnService.listPayments();
         StringBuilder html = new StringBuilder();
@@ -42,6 +44,14 @@ public class HomeController {
             .append("    h2 { margin:20px 0 12px; font-size:18px; }\n")
             .append("    .kv { display:grid; grid-template-columns: 160px 1fr; gap:8px 16px; }\n")
             .append("    .k { color:#9aa4b2; }\n")
+            .append("    .balances { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px; }\n")
+            .append("    .bal { background:#12151c; border:1px solid #242833; border-radius:10px; padding:12px; }\n")
+            .append("    .bal .label { color:#9aa4b2; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }\n")
+            .append("    .bal .value { font-size:20px; font-weight:600; }\n")
+            .append("    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 4px; }\n")
+            .append("    .actions form { margin:0; }\n")
+            .append("    .actions input { padding:8px 10px; border-radius:8px; border:1px solid #242833; background:#0f1115; color:#e8e8e8; }\n")
+            .append("    .actions button { padding:8px 12px; border:0; border-radius:8px; background:#2d6cdf; color:white; font-weight:600; }\n")
             .append("    table { width:100%; border-collapse: collapse; margin-top:8px; display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }\n")
             .append("    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid #242833; font-size:14px; white-space:nowrap; }\n")
             .append("    th { color:#9aa4b2; font-weight:600; }\n")
@@ -52,6 +62,8 @@ public class HomeController {
             .append("      h1 { font-size: 20px; }\n")
             .append("      h2 { font-size: 16px; }\n")
             .append("      .kv { grid-template-columns: 1fr; }\n")
+            .append("      .balances { grid-template-columns: 1fr; }\n")
+            .append("      .actions { flex-direction: column; }\n")
             .append("      .k { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }\n")
             .append("    }\n")
             .append("  </style>\n")
@@ -59,6 +71,20 @@ public class HomeController {
             .append("<body>\n")
             .append("  <div class=\"card\">\n")
             .append("    <h1>Core Lightning Node Info</h1>\n")
+            .append("    <div class=\"balances\">\n")
+            .append("      <div class=\"bal\"><div class=\"label\">On-chain balance</div><div class=\"value\">").append(onchainSat).append(" sats</div></div>\n")
+            .append("      <div class=\"bal\"><div class=\"label\">Lightning balance</div><div class=\"value\">").append(lightningSat).append(" sats</div></div>\n")
+            .append("    </div>\n")
+            .append("    <div class=\"actions\">\n")
+            .append("      <form method=\"post\" action=\"/actions/onchain-address\">\n")
+            .append("        <button type=\"submit\">New on-chain address</button>\n")
+            .append("      </form>\n")
+            .append("      <form method=\"post\" action=\"/actions/invoice\">\n")
+            .append("        <input name=\"amount\" type=\"number\" min=\"1\" step=\"1\" placeholder=\"sats\" required />\n")
+            .append("        <input name=\"description\" placeholder=\"description\" />\n")
+            .append("        <button type=\"submit\">Create invoice</button>\n")
+            .append("      </form>\n")
+            .append("    </div>\n")
             .append("    <div class=\"kv\">\n")
             .append("      <div class=\"k\">Alias</div><div>").append(safe(info.alias())).append("</div>\n")
             .append("      <div class=\"k\">Node ID</div><div class=\"mono\">").append(safe(info.nodeId())).append("</div>\n")
