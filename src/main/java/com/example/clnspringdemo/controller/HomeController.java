@@ -66,6 +66,7 @@ public class HomeController {
             .append("      <div class=\"k\">Block Height</div><div>").append(info.blockHeight()).append("</div>\n")
             .append("      <div class=\"k\">Gradle</div><div>").append(safe(getGradleVersion())).append("</div>\n")
             .append("    </div>\n")
+            .append("    <p><a href=\"/channels/open\">Open a channel</a></p>\n")
             .append("    <h2>Channels</h2>\n")
             .append("    <table>\n")
             .append("      <thead><tr>\n")

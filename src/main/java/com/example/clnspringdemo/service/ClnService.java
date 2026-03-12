@@ -7,6 +7,7 @@ import com.example.clnspringdemo.dto.ChannelInfo;
 import com.example.clnspringdemo.dto.NodeInfo;
 import com.example.clnspringdemo.dto.PaymentResult;
 import com.example.clnspringdemo.dto.PaymentInfo;
+import com.example.clnspringdemo.dto.OpenChannelResult;
 import com.google.protobuf.ByteString;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +119,50 @@ public class ClnService {
                 p.hasLabel() ? p.getLabel() : "",
                 p.hasBolt11() ? p.getBolt11() : "",
                 p.hasBolt12() ? p.getBolt12() : ""
+        );
+    }
+
+    public OpenChannelResult openChannel(String connection, long capacitySat) {
+        String nodeId = connection;
+        String host = null;
+        Integer port = null;
+
+        if (connection.contains("@")) {
+            String[] parts = connection.split("@", 2);
+            nodeId = parts[0];
+            String hostPart = parts[1];
+            int lastColon = hostPart.lastIndexOf(':');
+            if (lastColon > 0 && lastColon < hostPart.length() - 1) {
+                host = hostPart.substring(0, lastColon);
+                try {
+                    port = Integer.parseInt(hostPart.substring(lastColon + 1));
+                } catch (NumberFormatException ignored) {
+                }
+            } else {
+                host = hostPart;
+            }
+        }
+
+        ConnectRequest.Builder connect = ConnectRequest.newBuilder().setId(nodeId);
+        if (host != null && !host.isBlank()) {
+            connect.setHost(host);
+            if (port != null) {
+                connect.setPort(port);
+            }
+        }
+        nodeStub.connectPeer(connect.build());
+
+        long capacityMsat = capacitySat * 1000L;
+        FundchannelResponse resp = nodeStub.fundChannel(
+                FundchannelRequest.newBuilder()
+                        .setId(ByteString.copyFrom(HexFormat.of().parseHex(nodeId)))
+                        .setAmount(AmountOrAll.newBuilder().setAmount(Amount.newBuilder().setMsat(capacityMsat)))
+                        .build()
+        );
+
+        return new OpenChannelResult(
+                bytesToHex(resp.getTxid()),
+                bytesToHex(resp.getChannelId())
         );
     }
 
