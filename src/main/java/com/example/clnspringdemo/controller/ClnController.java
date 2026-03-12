@@ -32,23 +32,19 @@ public class ClnController {
     }
 
     @PostMapping("/pay-offer")
-    public ResponseEntity<?> payOffer(
+    public ResponseEntity<PaymentResult> payOffer(
             @RequestHeader(value = "Authorization", required = false) String auth,
             @RequestBody PayOfferRequest request
     ) {
         if (!isAuthorized(auth)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            PaymentResult result = clnService.payOffer(
-                    request.offer(),
-                    request.amountMsat() != null ? request.amountMsat() : 0,
-                    request.label()
-            );
-            return ResponseEntity.ok(result);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(java.util.Map.of("error", e.getMessage()));
-        }
+        PaymentResult result = clnService.payOffer(
+                request.offer(),
+                request.amountMsat() != null ? request.amountMsat() : 0,
+                request.label()
+        );
+        return ResponseEntity.ok(result);
     }
 
     private boolean isAuthorized(String auth) {
