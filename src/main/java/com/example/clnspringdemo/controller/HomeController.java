@@ -37,6 +37,7 @@ public class HomeController {
             .append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n")
             .append("  <meta name=\"format-detection\" content=\"telephone=no\" />\n")
             .append("  <title>CLN Dashboard</title>\n")
+            .append("  <script src=\"https://cdn.tailwindcss.com\"></script>\n")
             .append("  <style>\n")
             .append("    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }\n")
             .append("    .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:980px; }\n")

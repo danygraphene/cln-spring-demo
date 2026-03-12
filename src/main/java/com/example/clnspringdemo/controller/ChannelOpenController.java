@@ -27,6 +27,7 @@ public class ChannelOpenController {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Open Channel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }
     .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:720px; }
@@ -71,6 +72,7 @@ public class ChannelOpenController {
             .append("  <meta charset=\"utf-8\" />\n")
             .append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n")
             .append("  <title>Channel Opened</title>\n")
+            .append("  <script src=\"https://cdn.tailwindcss.com\"></script>\n")
             .append("  <style>\n")
             .append("    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }\n")
             .append("    .card { background:#171a21; border:1px solid #242833; border-radius:12px; padding:20px; max-width:720px; }\n")
