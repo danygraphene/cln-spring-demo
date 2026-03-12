@@ -77,7 +77,9 @@ public class HomeController {
             .append("        <div><span class=\"text-slate-400\">Gradle:</span> ").append(safe(getGradleVersion())).append("</div>\n")
             .append("      </div>\n")
 
-            .append("      <div class=\"mt-4\"><a class=\"text-blue-400 hover:underline\" href=\"/channels/open\">Open a channel</a></div>\n")
+            .append("      <div class=\"mt-4\">\n")
+            .append("        <a class=\"inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold\" href=\"/channels/open\">Open a channel</a>\n")
+            .append("      </div>\n")
             .append("    </div>\n")
 
             .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
