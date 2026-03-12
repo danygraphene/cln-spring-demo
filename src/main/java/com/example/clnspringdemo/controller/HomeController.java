@@ -58,15 +58,8 @@ public class HomeController {
             .append("        </div>\n")
             .append("      </div>\n")
 
-            .append("      <div class=\"flex flex-col gap-3 sm:flex-row sm:items-center mt-4\">\n")
-            .append("        <form method=\"post\" action=\"/actions/onchain-address\" class=\"w-full sm:w-auto\">\n")
-            .append("          <button class=\"w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 font-semibold\" type=\"submit\">New on-chain address</button>\n")
-            .append("        </form>\n")
-            .append("        <form method=\"post\" action=\"/actions/invoice\" class=\"flex flex-col sm:flex-row gap-2 w-full\">\n")
-            .append("          <input name=\"amount\" type=\"number\" min=\"1\" step=\"1\" placeholder=\"sats\" required class=\"w-full sm:w-32 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800\" />\n")
-            .append("          <input name=\"description\" placeholder=\"description\" class=\"flex-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800\" />\n")
-            .append("          <button class=\"w-full sm:w-auto px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-semibold\" type=\"submit\">Create invoice</button>\n")
-            .append("        </form>\n")
+            .append("      <div class=\"mt-3\">\n")
+            .append("        <a class=\"inline-flex items-center px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-semibold\" href=\"/liquidity\">Liquidity</a>\n")
             .append("      </div>\n")
 
             .append("      <div class=\"grid gap-3 mt-5 sm:grid-cols-2\">\n")
@@ -86,10 +79,6 @@ public class HomeController {
             .append("          <div class=\"text-xs uppercase tracking-wide text-slate-400\">Node ID</div>\n")
             .append("          <div class=\"font-mono text-xs break-all\">\n").append(safe(info.nodeId())).append("</div>\n")
             .append("        </div>\n")
-            .append("      </div>\n")
-
-            .append("      <div class=\"mt-4\">\n")
-            .append("        <a class=\"inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold\" href=\"/channels/open\">Open a channel</a>\n")
             .append("      </div>\n")
             .append("    </div>\n")
 
