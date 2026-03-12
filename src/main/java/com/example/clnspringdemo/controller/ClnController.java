@@ -42,7 +42,8 @@ public class ClnController {
         PaymentResult result = clnService.payOffer(
                 request.offer(),
                 request.amountMsat() != null ? request.amountMsat() : 0,
-                request.label()
+                request.label(),
+                request.description()
         );
         return ResponseEntity.ok(result);
     }

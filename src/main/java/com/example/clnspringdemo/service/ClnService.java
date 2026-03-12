@@ -50,7 +50,7 @@ public class ClnService {
                 .toList();
     }
 
-    public PaymentResult payOffer(String offer, long amountMsat, String label) {
+    public PaymentResult payOffer(String offer, long amountMsat, String label, String description) {
         // Step 1: Fetch invoice from the offer
         FetchinvoiceRequest.Builder fetchRequest = FetchinvoiceRequest.newBuilder()
                 .setOffer(offer);
@@ -63,12 +63,15 @@ public class ClnService {
         String bolt12Invoice = fetchResponse.getInvoice();
 
         // Step 2: Pay the fetched invoice
-        PayRequest payRequest = PayRequest.newBuilder()
+        PayRequest.Builder payRequest = PayRequest.newBuilder()
                 .setBolt11(bolt12Invoice)
-                .setLabel(label != null ? label : "offer-payment-" + System.currentTimeMillis())
-                .build();
+                .setLabel(label != null ? label : "offer-payment-" + System.currentTimeMillis());
+        
+        if (description != null && !description.isBlank()) {
+            payRequest.setDescription(description);
+        }
 
-        PayResponse payResponse = nodeStub.pay(payRequest);
+        PayResponse payResponse = nodeStub.pay(payRequest.build());
 
         return new PaymentResult(
                 bytesToHex(payResponse.getPaymentPreimage()),
