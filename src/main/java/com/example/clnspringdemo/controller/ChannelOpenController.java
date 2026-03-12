@@ -44,6 +44,10 @@ public class ChannelOpenController {
       <input name="connection" placeholder="02ab...@1.2.3.4:9735" required />
       <label>Capacity (sats)</label>
       <input name="capacity" type="number" min="1" step="1" required />
+      <label style="display:flex; align-items:center; gap:8px; margin-top:12px;">
+        <input type="checkbox" name="privateChannel" />
+        Private channel (do not announce)
+      </label>
       <button type="submit">Open Channel</button>
     </form>
     <p style="margin-top:16px;"><a href="/">← Back</a></p>
@@ -56,8 +60,10 @@ public class ChannelOpenController {
     @PostMapping("/channels/open")
     @ResponseBody
     public String open(@RequestParam("connection") String connection,
-                       @RequestParam("capacity") long capacitySat) {
-        OpenChannelResult result = clnService.openChannel(connection, capacitySat);
+                       @RequestParam("capacity") long capacitySat,
+                       @RequestParam(value = "privateChannel", required = false) String privateChannel) {
+        boolean isPrivate = privateChannel != null;
+        OpenChannelResult result = clnService.openChannel(connection, capacitySat, isPrivate);
         StringBuilder html = new StringBuilder();
         html.append("<!doctype html>\n")
             .append("<html lang=\"en\">\n")

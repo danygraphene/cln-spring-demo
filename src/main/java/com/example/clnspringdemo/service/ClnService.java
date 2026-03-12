@@ -122,7 +122,7 @@ public class ClnService {
         );
     }
 
-    public OpenChannelResult openChannel(String connection, long capacitySat) {
+    public OpenChannelResult openChannel(String connection, long capacitySat, boolean privateChannel) {
         String nodeId = connection;
         String host = null;
         Integer port = null;
@@ -153,12 +153,13 @@ public class ClnService {
         nodeStub.connectPeer(connect.build());
 
         long capacityMsat = capacitySat * 1000L;
-        FundchannelResponse resp = nodeStub.fundChannel(
-                FundchannelRequest.newBuilder()
-                        .setId(ByteString.copyFrom(HexFormat.of().parseHex(nodeId)))
-                        .setAmount(AmountOrAll.newBuilder().setAmount(Amount.newBuilder().setMsat(capacityMsat)))
-                        .build()
-        );
+        FundchannelRequest.Builder fund = FundchannelRequest.newBuilder()
+                .setId(ByteString.copyFrom(HexFormat.of().parseHex(nodeId)))
+                .setAmount(AmountOrAll.newBuilder().setAmount(Amount.newBuilder().setMsat(capacityMsat)));
+        if (privateChannel) {
+            fund.setAnnounce(false);
+        }
+        FundchannelResponse resp = nodeStub.fundChannel(fund.build());
 
         return new OpenChannelResult(
                 bytesToHex(resp.getTxid()),
