@@ -50,17 +50,13 @@ public class ClnService {
                 .toList();
     }
 
-    public PaymentResult payOffer(String offer, long amountMsat, String label, String description) {
+    public PaymentResult payOffer(String offer, long amountMsat, String label) {
         // Step 1: Fetch invoice from the offer
         FetchinvoiceRequest.Builder fetchRequest = FetchinvoiceRequest.newBuilder()
                 .setOffer(offer);
         
         if (amountMsat > 0) {
             fetchRequest.setAmountMsat(Amount.newBuilder().setMsat(amountMsat).build());
-        }
-        
-        if (description != null && !description.isBlank()) {
-            fetchRequest.setPayerNote(description);
         }
 
         FetchinvoiceResponse fetchResponse = nodeStub.fetchInvoice(fetchRequest.build());
