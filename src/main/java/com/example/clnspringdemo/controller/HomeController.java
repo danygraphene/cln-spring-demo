@@ -104,7 +104,7 @@ public class HomeController {
                 .append("<td>").append(p.amountSentMsat()).append("</td>")
                 .append("<td>").append(safe(p.label())).append("</td>")
                 .append("<td class=\"mono\">").append(safe(p.destination())).append("</td>")
-                .append("<td class=\"mono\">").append(safe(p.paymentHash())).append("</td>")
+                .append("<td class=\"mono\"><a href=\"/payments/").append(safe(p.paymentHash())).append("\">").append(safe(p.paymentHash())).append("</a></td>")
                 .append("</tr>\n");
         }
 

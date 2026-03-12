@@ -99,6 +99,28 @@ public class ClnService {
                 .toList();
     }
 
+    public PaymentInfo getPayment(String paymentHashHex) {
+        ListpaysResponse response = nodeStub.listPays(
+                ListpaysRequest.newBuilder()
+                        .setPaymentHash(ByteString.copyFrom(HexFormat.of().parseHex(paymentHashHex)))
+                        .build()
+        );
+        if (response.getPaysCount() == 0) return null;
+        var p = response.getPays(0);
+        return new PaymentInfo(
+                bytesToHex(p.getPaymentHash()),
+                p.getStatus().name(),
+                p.hasDestination() ? bytesToHex(p.getDestination()) : "",
+                p.getCreatedAt(),
+                p.hasCompletedAt() ? p.getCompletedAt() : 0,
+                p.hasAmountMsat() ? p.getAmountMsat().getMsat() : 0,
+                p.hasAmountSentMsat() ? p.getAmountSentMsat().getMsat() : 0,
+                p.hasLabel() ? p.getLabel() : "",
+                p.hasBolt11() ? p.getBolt11() : "",
+                p.hasBolt12() ? p.getBolt12() : ""
+        );
+    }
+
     private String bytesToHex(ByteString bytes) {
         return HexFormat.of().formatHex(bytes.toByteArray());
     }
