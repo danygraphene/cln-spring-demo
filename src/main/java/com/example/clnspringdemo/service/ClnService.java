@@ -51,6 +51,18 @@ public class ClnService {
     }
 
     public PaymentResult payOffer(String offer, long amountMsat, String label) {
+        String effectiveLabel = label != null ? label : "offer-payment-" + System.currentTimeMillis();
+        
+        // Check for duplicate label
+        if (label != null) {
+            ListpaysResponse existingPays = nodeStub.listPays(ListpaysRequest.newBuilder().build());
+            boolean labelExists = existingPays.getPaysList().stream()
+                    .anyMatch(p -> p.hasLabel() && effectiveLabel.equals(p.getLabel()));
+            if (labelExists) {
+                throw new IllegalArgumentException("Payment with label '" + effectiveLabel + "' already exists");
+            }
+        }
+        
         // Step 1: Fetch invoice from the offer
         FetchinvoiceRequest.Builder fetchRequest = FetchinvoiceRequest.newBuilder()
                 .setOffer(offer);
@@ -65,7 +77,7 @@ public class ClnService {
         // Step 2: Pay the fetched invoice
         PayRequest.Builder payRequest = PayRequest.newBuilder()
                 .setBolt11(bolt12Invoice)
-                .setLabel(label != null ? label : "offer-payment-" + System.currentTimeMillis());
+                .setLabel(effectiveLabel);
 
         PayResponse payResponse = nodeStub.pay(payRequest.build());
 
