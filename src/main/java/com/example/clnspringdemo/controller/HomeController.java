@@ -33,6 +33,7 @@ public class HomeController {
             .append("<head>\n")
             .append("  <meta charset=\"utf-8\" />\n")
             .append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n")
+            .append("  <meta name=\"format-detection\" content=\"telephone=no\" />\n")
             .append("  <title>CLN Dashboard</title>\n")
             .append("  <style>\n")
             .append("    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; background:#0f1115; color:#e8e8e8; }\n")
@@ -104,7 +105,8 @@ public class HomeController {
                 .append("<td>").append(p.amountSentMsat()).append("</td>")
                 .append("<td>").append(safe(p.label())).append("</td>")
                 .append("<td class=\"mono\">").append(safe(p.destination())).append("</td>")
-                .append("<td class=\"mono\"><a href=\"/payments/").append(safe(p.paymentHash())).append("\">").append(safe(p.paymentHash())).append("</a></td>")
+                .append("<td class=\"mono\"><span>").append(safe(p.paymentHash())).append("</span> ")
+                .append("<a href=\"/payments/").append(safe(p.paymentHash())).append("\">view</a></td>")
                 .append("</tr>\n");
         }
 
