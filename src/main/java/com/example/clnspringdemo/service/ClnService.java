@@ -58,6 +58,10 @@ public class ClnService {
         if (amountMsat > 0) {
             fetchRequest.setAmountMsat(Amount.newBuilder().setMsat(amountMsat).build());
         }
+        
+        if (description != null && !description.isBlank()) {
+            fetchRequest.setPayerNote(description);
+        }
 
         FetchinvoiceResponse fetchResponse = nodeStub.fetchInvoice(fetchRequest.build());
         String bolt12Invoice = fetchResponse.getInvoice();
@@ -66,10 +70,6 @@ public class ClnService {
         PayRequest.Builder payRequest = PayRequest.newBuilder()
                 .setBolt11(bolt12Invoice)
                 .setLabel(label != null ? label : "offer-payment-" + System.currentTimeMillis());
-        
-        if (description != null && !description.isBlank()) {
-            payRequest.setDescription(description);
-        }
 
         PayResponse payResponse = nodeStub.pay(payRequest.build());
 
