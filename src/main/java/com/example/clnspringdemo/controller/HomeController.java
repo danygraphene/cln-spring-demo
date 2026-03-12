@@ -6,6 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
+
 @Controller
 public class HomeController {
 
@@ -57,6 +63,7 @@ public class HomeController {
             .append("      <div class=\"k\">Node ID</div><div class=\"mono\">").append(safe(info.nodeId())).append("</div>\n")
             .append("      <div class=\"k\">Network</div><div>").append(safe(info.network())).append("</div>\n")
             .append("      <div class=\"k\">Block Height</div><div>").append(info.blockHeight()).append("</div>\n")
+            .append("      <div class=\"k\">Gradle</div><div>").append(safe(getGradleVersion())).append("</div>\n")
             .append("    </div>\n")
             .append("    <h2>Channels</h2>\n")
             .append("    <table>\n")
@@ -111,6 +118,26 @@ public class HomeController {
             .append("</body>\n")
             .append("</html>\n");
         return html.toString();
+    }
+
+    private String getGradleVersion() {
+        Path path = Path.of("gradle/wrapper/gradle-wrapper.properties");
+        if (!Files.exists(path)) return "unknown";
+        Properties props = new Properties();
+        try (InputStream in = Files.newInputStream(path)) {
+            props.load(in);
+            String dist = props.getProperty("distributionUrl", "");
+            int idx = dist.indexOf("gradle-");
+            if (idx >= 0) {
+                String tail = dist.substring(idx + 7);
+                int end = tail.indexOf("-bin");
+                if (end > 0) {
+                    return tail.substring(0, end);
+                }
+            }
+        } catch (IOException ignored) {
+        }
+        return "unknown";
     }
 
     private String safe(String v) {
