@@ -27,11 +27,23 @@ public class HomeController {
     @GetMapping("/")
     @ResponseBody
     public String home() {
-        NodeInfo info = clnService.getInfo();
-        long onchainSat = clnService.getOnchainBalanceSat();
-        long lightningSat = clnService.getLightningBalanceSat();
-        var channels = clnService.listChannels();
-        var payments = clnService.listPayments();
+        NodeInfo info;
+        long onchainSat = 0;
+        long lightningSat = 0;
+        java.util.List<com.example.clnspringdemo.dto.ChannelInfo> channels = java.util.Collections.emptyList();
+        java.util.List<com.example.clnspringdemo.dto.PaymentInfo> payments = java.util.Collections.emptyList();
+        String syncStatus = null;
+        
+        try {
+            info = clnService.getInfo();
+            onchainSat = clnService.getOnchainBalanceSat();
+            lightningSat = clnService.getLightningBalanceSat();
+            channels = clnService.listChannels();
+            payments = clnService.listPayments();
+        } catch (Exception e) {
+            syncStatus = "Node syncing or unavailable: " + e.getMessage();
+            info = new NodeInfo("unknown", "unknown", "unknown", 0);
+        }
 
         StringBuilder html = new StringBuilder();
         html.append("<!doctype html>\n")
@@ -44,8 +56,18 @@ public class HomeController {
             .append("  <script src=\"/tailwind.js\"></script>\n")
             .append("</head>\n")
             .append("<body class=\"bg-slate-950 text-slate-100\">\n")
-            .append("  <div class=\"max-w-5xl mx-auto p-4 sm:p-6 space-y-6\">\n")
-            .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
+            .append("  <div class=\"max-w-5xl mx-auto p-4 sm:p-6 space-y-6\">\n");
+        
+        if (syncStatus != null) {
+            html.append("    <div class=\"bg-amber-900/60 border border-amber-700 rounded-xl p-4\">\n")
+                .append("      <div class=\"flex items-center gap-2\">\n")
+                .append("        <span class=\"animate-pulse\">⏳</span>\n")
+                .append("        <span class=\"text-amber-200\">").append(safe(syncStatus)).append("</span>\n")
+                .append("      </div>\n")
+                .append("    </div>\n");
+        }
+        
+        html.append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
             .append("      <h1 class=\"text-xl sm:text-2xl font-semibold\">Core Lightning Node</h1>\n")
             .append("      <div class=\"grid gap-3 mt-4 sm:grid-cols-2\">\n")
             .append("        <div class=\"bg-slate-900 border border-slate-800 rounded-lg p-3\">\n")
