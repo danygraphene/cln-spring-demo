@@ -1,10 +1,13 @@
 server:
   port: 8080
 
+pay-offer:
+  token: 2aa7eb8ee69072ec4b07afb468822cc8408e8bc49ae3ebd9
+
 cln:
   grpc:
     host: 127.0.0.1
     port: 9736
-    ca-cert: /var/lib/lightning/bitcoin/ca.pem
-    client-cert: /var/lib/lightning/bitcoin/client.pem
-    client-key: /var/lib/lightning/bitcoin/client-key.pem
+    ca-cert: ca.pem
+    client-cert: client.pem
+    client-key: client-key.pem

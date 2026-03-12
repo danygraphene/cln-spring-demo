@@ -5,6 +5,7 @@ import com.example.clnspringdemo.dto.NodeInfo;
 import com.example.clnspringdemo.dto.PayOfferRequest;
 import com.example.clnspringdemo.dto.PaymentResult;
 import com.example.clnspringdemo.service.ClnService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import java.util.List;
 public class ClnController {
 
     private final ClnService clnService;
+
+    @Value("${pay-offer.token}")
+    private String payOfferToken;
 
     public ClnController(ClnService clnService) {
         this.clnService = clnService;
@@ -50,7 +54,6 @@ public class ClnController {
     private boolean isAuthorized(String auth) {
         if (auth == null || !auth.startsWith("Bearer ")) return false;
         String token = auth.substring("Bearer ".length());
-        String expected = System.getenv("PAY_OFFER_TOKEN");
-        return expected != null && token.equals(expected);
+        return payOfferToken != null && token.equals(payOfferToken);
     }
 }
