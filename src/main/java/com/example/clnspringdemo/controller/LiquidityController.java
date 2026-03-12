@@ -26,12 +26,6 @@ public class LiquidityController {
         <h1 class="text-xl sm:text-2xl font-semibold">Liquidity</h1>
         <p class="text-sm text-slate-400 mt-1">Manage channels, on-chain addresses, and invoices.</p>
       </div>
-
-      <div class="space-y-3">
-        <h2 class="text-lg font-semibold">Open Channel</h2>
-        <a class="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold" href="/channels/open">Open a channel</a>
-      </div>
-
       <div class="space-y-3">
         <h2 class="text-lg font-semibold">On-chain Address</h2>
         <form method="post" action="/actions/onchain-address">

@@ -83,7 +83,10 @@ public class HomeController {
             .append("    </div>\n")
 
             .append("    <div class=\"bg-slate-900/60 border border-slate-800 rounded-xl p-4 sm:p-6\">\n")
-            .append("      <h2 class=\"text-lg font-semibold\">Channels</h2>\n")
+            .append("      <div class=\"flex items-center justify-between\">\n")
+            .append("        <h2 class=\"text-lg font-semibold\">Channels</h2>\n")
+            .append("        <a class=\"inline-flex items-center px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold\" href=\"/channels/open\">Open channel</a>\n")
+            .append("      </div>\n")
             .append("      <div class=\"overflow-x-auto mt-3\">\n")
             .append("        <table class=\"min-w-full text-sm\">\n")
             .append("          <thead class=\"text-slate-400\"><tr>\n")
