@@ -69,7 +69,7 @@ public class HomeController {
             .append("      <div class=\"mt-5\">\n")
             .append("        <div class=\"flex items-center justify-between\">\n")
             .append("          <h2 class=\"text-lg font-semibold\">Liquidity</h2>\n")
-            .append("          <a class=\"inline-flex items-center px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold\" href=\"/liquidity\">Liquidity</a>\n")
+            .append("          <a class=\"inline-flex items-center px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold\" href=\"/liquidity\">Add liquidity</a>\n")
             .append("        </div>\n")
             .append("        <div class=\"grid gap-3 mt-3 sm:grid-cols-2\">\n")
             .append("          <div class=\"bg-slate-900 border border-slate-800 rounded-lg p-3\">\n")
