@@ -85,18 +85,18 @@ public class HomeController {
             .append("      <div class=\"overflow-x-auto mt-3\">\n")
             .append("        <table class=\"min-w-full text-sm\">\n")
             .append("          <thead class=\"text-slate-400\"><tr>\n")
-            .append("            <th class=\"text-left p-2\">Short ID</th><th class=\"text-left p-2\">Peer ID</th><th class=\"text-left p-2\">State</th><th class=\"text-left p-2\">Capacity</th><th class=\"text-left p-2\">Spendable</th><th class=\"text-left p-2\">Receivable</th>\n")
+            .append("            <th class=\"text-left p-2\">Short ID</th><th class=\"text-left p-2\">State</th><th class=\"text-left p-2\">Capacity</th><th class=\"text-left p-2\">Spendable</th><th class=\"text-left p-2\">Receivable</th><th class=\"text-left p-2\">Peer</th>\n")
             .append("          </tr></thead>\n")
             .append("          <tbody class=\"divide-y divide-slate-800\">\n");
 
         for (var ch : channels) {
             html.append("          <tr>")
                 .append("<td class=\"p-2 font-mono text-xs\">").append(safe(ch.shortChannelId())).append("</td>")
-                .append("<td class=\"p-2 font-mono text-xs\">").append(safe(ch.peerId())).append("</td>")
                 .append("<td class=\"p-2\">").append(safe(ch.state())).append("</td>")
                 .append("<td class=\"p-2\">").append(ch.capacityMsat()).append("</td>")
                 .append("<td class=\"p-2\">").append(ch.spendableMsat()).append("</td>")
                 .append("<td class=\"p-2\">").append(ch.receivableMsat()).append("</td>")
+                .append("<td class=\"p-2 font-mono text-xs\">").append(abbrev(safe(ch.peerId()))).append("</td>")
                 .append("</tr>\n");
         }
 
