@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 @Controller
@@ -117,13 +120,13 @@ public class HomeController {
 
         for (var p : payments) {
             html.append("          <tr>")
-                .append("<td class=\"p-2\">").append(p.createdAt()).append("</td>")
+                .append("<td class=\"p-2\">").append(formatTime(p.createdAt())).append("</td>")
                 .append("<td class=\"p-2\">").append(safe(p.status())).append("</td>")
                 .append("<td class=\"p-2\">").append(p.amountMsat()).append("</td>")
                 .append("<td class=\"p-2\">").append(p.amountSentMsat()).append("</td>")
                 .append("<td class=\"p-2\">").append(safe(p.label())).append("</td>")
-                .append("<td class=\"p-2 font-mono text-xs\">").append(safe(p.destination())).append("</td>")
-                .append("<td class=\"p-2 font-mono text-xs\"><span>").append(safe(p.paymentHash())).append("</span> ")
+                .append("<td class=\"p-2 font-mono text-xs\">").append(abbrev(safe(p.destination()))).append("</td>")
+                .append("<td class=\"p-2 font-mono text-xs\"><span>").append(abbrev(safe(p.paymentHash()))).append("</span> ")
                 .append("<a class=\"text-blue-400 hover:underline\" href=\"/payments/").append(safe(p.paymentHash())).append("\">view</a></td>")
                 .append("</tr>\n");
         }
@@ -161,6 +164,18 @@ public class HomeController {
         } catch (IOException ignored) {
         }
         return "unknown";
+    }
+
+    private String formatTime(long epochSeconds) {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                .withZone(ZoneId.systemDefault())
+                .format(Instant.ofEpochSecond(epochSeconds));
+    }
+
+    private String abbrev(String v) {
+        if (v == null) return "";
+        if (v.length() <= 12) return v;
+        return v.substring(0, 4) + "…" + v.substring(v.length() - 4);
     }
 
     private String safe(String v) {
