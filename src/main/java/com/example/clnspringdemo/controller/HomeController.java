@@ -20,6 +20,7 @@ public class HomeController {
     public String home() {
         NodeInfo info = clnService.getInfo();
         var channels = clnService.listChannels();
+        var payments = clnService.listPayments();
         StringBuilder html = new StringBuilder();
         html.append("<!doctype html>\n")
             .append("<html lang=\"en\">\n")
@@ -77,6 +78,31 @@ public class HomeController {
 
         if (channels.isEmpty()) {
             html.append("      <tr><td colspan=\"6\" class=\"k\">No channels</td></tr>\n");
+        }
+
+        html.append("      </tbody>\n")
+            .append("    </table>\n")
+            .append("    <h2>Payments</h2>\n")
+            .append("    <table>\n")
+            .append("      <thead><tr>\n")
+            .append("        <th>Created</th><th>Status</th><th>Amount (msat)</th><th>Sent (msat)</th><th>Label</th><th>Dest</th><th>Hash</th>\n")
+            .append("      </tr></thead>\n")
+            .append("      <tbody>\n");
+
+        for (var p : payments) {
+            html.append("      <tr>")
+                .append("<td>").append(p.createdAt()).append("</td>")
+                .append("<td>").append(safe(p.status())).append("</td>")
+                .append("<td>").append(p.amountMsat()).append("</td>")
+                .append("<td>").append(p.amountSentMsat()).append("</td>")
+                .append("<td>").append(safe(p.label())).append("</td>")
+                .append("<td class=\"mono\">").append(safe(p.destination())).append("</td>")
+                .append("<td class=\"mono\">").append(safe(p.paymentHash())).append("</td>")
+                .append("</tr>\n");
+        }
+
+        if (payments.isEmpty()) {
+            html.append("      <tr><td colspan=\"7\" class=\"k\">No payments</td></tr>\n");
         }
 
         html.append("      </tbody>\n")

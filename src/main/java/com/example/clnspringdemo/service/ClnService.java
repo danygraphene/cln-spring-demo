@@ -6,6 +6,7 @@ import cln.Primitives.*;
 import com.example.clnspringdemo.dto.ChannelInfo;
 import com.example.clnspringdemo.dto.NodeInfo;
 import com.example.clnspringdemo.dto.PaymentResult;
+import com.example.clnspringdemo.dto.PaymentInfo;
 import com.google.protobuf.ByteString;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,27 @@ public class ClnService {
                 payResponse.getAmountSentMsat().getMsat(),
                 payResponse.getStatus().name()
         );
+    }
+
+    public List<PaymentInfo> listPayments() {
+        ListpaysResponse response = nodeStub.listPays(
+                ListpaysRequest.newBuilder().build()
+        );
+
+        return response.getPaysList().stream()
+                .map(p -> new PaymentInfo(
+                        bytesToHex(p.getPaymentHash()),
+                        p.getStatus().name(),
+                        p.hasDestination() ? bytesToHex(p.getDestination()) : "",
+                        p.getCreatedAt(),
+                        p.hasCompletedAt() ? p.getCompletedAt() : 0,
+                        p.hasAmountMsat() ? p.getAmountMsat().getMsat() : 0,
+                        p.hasAmountSentMsat() ? p.getAmountSentMsat().getMsat() : 0,
+                        p.hasLabel() ? p.getLabel() : "",
+                        p.hasBolt11() ? p.getBolt11() : "",
+                        p.hasBolt12() ? p.getBolt12() : ""
+                ))
+                .toList();
     }
 
     private String bytesToHex(ByteString bytes) {
