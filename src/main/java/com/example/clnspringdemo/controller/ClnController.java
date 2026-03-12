@@ -50,7 +50,7 @@ public class ClnController {
     private boolean isAuthorized(String auth) {
         if (auth == null || !auth.startsWith("Bearer ")) return false;
         String token = auth.substring("Bearer ".length());
-        String expected = System.getenv().getOrDefault("PAY_OFFER_TOKEN", "CHANGE_ME");
-        return token.equals(expected);
+        String expected = System.getenv("PAY_OFFER_TOKEN");
+        return expected != null && token.equals(expected);
     }
 }
